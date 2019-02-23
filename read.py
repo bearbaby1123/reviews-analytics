@@ -11,3 +11,11 @@ with open('reviews.txt', 'r') as f:
 average_length = total_length / len(data)
 print('The file is completely loaded, there is', len(data), 'pieces of comments')
 print('The average length of the comment is', average_length)
+
+new_data = []
+for d in data:
+	if len(d) < 100:
+		new_data.append(d)
+
+print(len(new_data))
+print(new_data[0])
