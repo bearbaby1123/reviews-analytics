@@ -17,5 +17,12 @@ for d in data:
 	if len(d) < 100:
 		new_data.append(d)
 
-print(len(new_data))
-print(new_data[0])
+print('There are', len(new_data), 'comments under 100 words')
+#print(new_data[0])
+
+good_data = []
+for d in data:
+	if 'good' in d:
+		good_data.append(d)
+print('There are', len(good_data), 'comments including "good"')
+print(good_data[0])
