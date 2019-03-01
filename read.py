@@ -1,28 +1,77 @@
-data = []
-total_length = 0
-count = 0
-with open('reviews.txt', 'r') as f:
-	for line in f:
-		total_length += len(line) 
-		data.append(line.strip())
-		#count += 1
-		#if count % 1000 == 0:
-			#print(len(data))
-average_length = total_length / len(data)
-print('The file is completely loaded, there is', len(data), 'pieces of comments')
-print('The average length of the comment is', average_length)
+# Read File
+def read_file(filename):
+	with open(filename, 'r') as f:
+		data = []
+		count = 0
+		total_length = 0
+		for line in f:
+			data.append(line.strip())
+			total_length += len(line) 
+			count += 1
+			if count % 10000 == 0:
+				print(len(data))
+		data_and_length = [data, total_length]
+	return data_and_length
 
-new_data = []
-for d in data:
-	if len(d) < 100:
-		new_data.append(d)
+# Filter reviews under 100 words
+def filter_len(data, length):
+	new_data = []
+	for d in data:
+		if len(d) < length:
+			new_data.append(d)
+	return new_data
 
-print('There are', len(new_data), 'comments under 100 words')
-#print(new_data[0])
+# Filter reviews including good
+def filter_word(data, word):
+	word_data = []
+	for d in data:
+		if word in d:
+			word_data.append(d)
+	return word_data
 
-good_data = []
-for d in data:
-	if 'good' in d:
-		good_data.append(d)
-print('There are', len(good_data), 'comments including "good"')
-print(good_data[0])
+# Count how many times a word used
+def word_count(data):
+	word_count = {}
+	for d in data:
+		for word in d.split(' '):
+			if word in word_count:
+				word_count[word] += 1
+			else:
+				word_count[word] = 1
+	return word_count
+
+#Filter words used over	100000 times
+def filter_count(word_count, count):
+	for word in word_count:
+		if word_count[word] > count:
+			print(word, ':', word_count[word])
+
+# Let user search
+def user_search(word_count):
+	while True:
+		word = input('Which word do you want to look up? ')
+		if word == 'q':
+			break
+		if word in word_count:
+			print(word_count[word])
+		else:
+			print('This word is not involved in all reviews')
+
+def main():
+	data_and_length = read_file('reviews.txt')
+	data = data_and_length[0]
+	total_length = data_and_length[1]
+	#new_data = filter_len(data, 100)
+	#word_data = filter_word(data, 'good')
+	#print('The file is completely loaded, there is', len(data), 'pieces of comments')
+	#average_length = total_length / len(data)
+	#print('There are', len(new_data), 'comments under 100 words')
+	#print('The average length of the comment is', average_length)
+	#print('There are', len(word_data), 'comments including "good"')
+	#print(word_data[0])
+	word_count = word_count(data)
+	print('There are', len(word_count), 'different words in all reviews')
+	filter_count(word_count, 1000000)
+	user_search(word_count)
+
+main()
