@@ -1,6 +1,10 @@
+import time
+import progressbar
+
 # Read File
 def read_file(filename):
 	with open(filename, 'r') as f:
+		bar = progressbar.ProgressBar(max_value=1000000)
 		data = []
 		count = 0
 		total_length = 0
@@ -8,8 +12,8 @@ def read_file(filename):
 			data.append(line.strip())
 			total_length += len(line) 
 			count += 1
-			if count % 10000 == 0:
-				print(len(data))
+			bar.update(count)
+		
 		data_and_length = [data, total_length]
 	return data_and_length
 
@@ -30,7 +34,7 @@ def filter_word(data, word):
 	return word_data
 
 # Count how many times a word used
-def word_count(data):
+def wc(data):
 	word_count = {}
 	for d in data:
 		for word in d.split(' '):
@@ -69,9 +73,12 @@ def main():
 	#print('The average length of the comment is', average_length)
 	#print('There are', len(word_data), 'comments including "good"')
 	#print(word_data[0])
-	word_count = word_count(data)
+	start_time = time.time()
+	word_count = wc(data)
 	print('There are', len(word_count), 'different words in all reviews')
 	filter_count(word_count, 1000000)
+	end_time = time.time()
+	print('it takes ', end_time - start_time, 'seconds')
 	user_search(word_count)
 
 main()
